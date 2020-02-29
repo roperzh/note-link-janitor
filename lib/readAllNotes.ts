@@ -26,15 +26,13 @@ async function readNote(notePath: string): Promise<Note> {
 
   const parseTree = processor.parse(noteContents) as MDAST.Root;
   const headingNode = await headingFinder.run(parseTree);
-  if (headingNode.type === "missingTitle") {
-    throw new Error(`${notePath} has no title`);
-  }
-  const title = remark()
+  const title = headingNode.type !== "missingTitle" ? remark()
     .stringify({
       type: "root",
       children: (headingNode as MDAST.Heading).children
     })
-    .trimEnd();
+    .trimEnd()
+    : notePath.split('/').pop()!.split(".")[0];
 
   return { title, links: getNoteLinks(parseTree), parseTree, noteContents };
 }

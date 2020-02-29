@@ -26,30 +26,35 @@ import updateBacklinks from "./lib/updateBacklinks";
     }
   }
   const noteRankings: { [key: string]: number } = {};
-  graph.rank(0.85, 0.000001, function(node, rank) {
+  graph.rank(0.85, 0.000001, function (node, rank) {
     noteRankings[node] = rank;
   });
 
+  const ZKTitleRegex = /\d{12,14}/gm;
+
   await Promise.all(
     Object.keys(notes).map(async notePath => {
-      const backlinks = linkMap.get(notes[notePath].title);
+      let backlinks = linkMap.get(notes[notePath].title);
+      if (!backlinks && ZKTitleRegex.test(notes[notePath].title)) {
+        backlinks = linkMap.get(notes[notePath].title.split(' ')[0]);
+      }
       const newContents = updateBacklinks(
         notes[notePath].parseTree,
         notes[notePath].noteContents,
         backlinks
           ? [...backlinks.keys()]
-              .map(sourceTitle => ({
-                sourceTitle,
-                context: backlinks.get(sourceTitle)!
-              }))
-              .sort(
-                (
-                  { sourceTitle: sourceTitleA },
-                  { sourceTitle: sourceTitleB }
-                ) =>
-                  (noteRankings[sourceTitleB] || 0) -
-                  (noteRankings[sourceTitleA] || 0)
-              )
+            .map(sourceTitle => ({
+              sourceTitle,
+              context: backlinks!.get(sourceTitle)!
+            }))
+            .sort(
+              (
+                { sourceTitle: sourceTitleA },
+                { sourceTitle: sourceTitleB }
+              ) =>
+                (noteRankings[sourceTitleB] || 0) -
+                (noteRankings[sourceTitleA] || 0)
+            )
           : []
       );
       if (newContents !== notes[notePath].noteContents) {
