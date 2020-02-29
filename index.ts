@@ -35,8 +35,11 @@ import updateBacklinks from "./lib/updateBacklinks";
   await Promise.all(
     Object.keys(notes).map(async notePath => {
       let backlinks = linkMap.get(notes[notePath].title);
-      if (!backlinks && ZKTitleRegex.test(notes[notePath].title)) {
-        backlinks = linkMap.get(notes[notePath].title.split(' ')[0]);
+      let backlinksFromZKTitle = linkMap.get(notes[notePath].title.split(' ')[0]);
+      if (!backlinks && backlinksFromZKTitle) {
+        backlinks = backlinksFromZKTitle;
+      } else if (backlinks && backlinksFromZKTitle) {
+        backlinks = new Map([...backlinks].concat([...backlinksFromZKTitle]))
       }
       const newContents = updateBacklinks(
         notes[notePath].parseTree,
