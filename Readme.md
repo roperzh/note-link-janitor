@@ -1,5 +1,11 @@
 # note-link-janitor
 
+---
+
+Update for The Archive style of linking between notes (using only date-id between [[...]]).
+
+---
+
 This script reads in a folder of Markdown files, notes all the [[wiki-style links]] between them, then adds a special "backlinks" section which lists passages which reference a given file.
 
 For example, this text might get added to `Sample note.md`:
@@ -30,10 +36,9 @@ This is FYI-style open source. I'm sharing it for interested parties, but withou
 
 ## Usage
 
-To install a published release, run:
-
 ```
-yarn global add @andymatuschak/note-link-janitor
+yarn install
+yarn run build
 ```
 
 Then to run it (note that it will modify your `.md` files _in-place_; you may want to make a backup!):
@@ -45,14 +50,3 @@ note-link-janitor path/to/folder/containing/md/files
 That will run it once; you'll need to create a cron job or a launch daemon to run it regularly.
 
 It's built to run against Node >=12, so you may need to upgrade or swap your runtime version.
-
-## Building a local copy
-
-```
-yarn install
-yarn run build
-```
-
-## Future work
-
-In the future, I intend to expand this project to monitor for broken links, orphans, and other interesting hypertext-y predicates.
