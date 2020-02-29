@@ -30,7 +30,7 @@ import updateBacklinks from "./lib/updateBacklinks";
     noteRankings[node] = rank;
   });
 
-  const ZKTitleRegex = /\d{12,14}/gm;
+  const ZKTitleRegex = /\d{12,14}\s?(.+)?/;
 
   await Promise.all(
     Object.keys(notes).map(async notePath => {
