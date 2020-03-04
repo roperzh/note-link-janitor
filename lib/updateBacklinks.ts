@@ -78,7 +78,7 @@ export default function updateBacklinks(
         entry =>
           `* [[${entry.sourceTitle}]]\n${entry.context
             .map(
-              block => `\t* ${processor.stringify(block).replace(/\n.+/, "")}\n`
+              block => `\t* ${processor.stringify(block).replace(/\n/g, "\n\t")}\n`
             )
             .join("")}`
       )
