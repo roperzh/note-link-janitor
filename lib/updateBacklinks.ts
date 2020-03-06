@@ -85,10 +85,18 @@ export default function updateBacklinks(
       .join("")}\n`;
   }
 
+  let beforeBacklinks = noteContents.slice(0, insertionOffset);
+  if (beforeBacklinks.split(/\r?\n/).pop() !== '' && backlinksString !== '') {
+    beforeBacklinks += '\n\n\n\n'
+  }
+  let afterBacklinks = noteContents.slice(oldEndOffset);
+  if (afterBacklinks.split(/\r?\n/).length === 1 && !afterBacklinks.includes('## ...') && backlinksString !== '') {
+    afterBacklinks = '## ...'
+  }
   const newNoteContents =
-    noteContents.slice(0, insertionOffset) +
+    beforeBacklinks +
     backlinksString +
-    noteContents.slice(oldEndOffset);
+    afterBacklinks;
 
   return newNoteContents;
 }
