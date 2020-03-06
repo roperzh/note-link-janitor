@@ -3,6 +3,7 @@
 ---
 
 Update for The Archive style of linking between notes (using only date-id between [[...]]).
+More info about changes and updates: https://forum.zettelkasten.de/discussion/833/insert-a-list-of-backlinks-into-all-your-notes
 
 ---
 
