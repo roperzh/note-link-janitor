@@ -1,5 +1,5 @@
 {
-  "name": "@andymatuschak/note-link-janitor",
+  "name": "note-link-janitor",
   "version": "0.0.1",
   "author": "Andy Matuschak",
   "main": "out/index.js",
@@ -12,7 +12,6 @@
     "ts-node": "^8.3.0",
     "typescript": "~3"
   },
-  "repository": "andymatuschak/note-link-janitor",
   "dependencies": {
     "@types/mdast": "^3.0.3",
     "pagerank.js": "^1.0.2",
