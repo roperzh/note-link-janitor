@@ -26,13 +26,15 @@ async function readNote(notePath: string): Promise<Note> {
 
   const parseTree = processor.parse(noteContents) as MDAST.Root;
   const headingNode = await headingFinder.run(parseTree);
-  const title = headingNode.type !== "missingTitle" ? remark()
-    .stringify({
-      type: "root",
-      children: (headingNode as MDAST.Heading).children
-    })
-    .trimEnd()
-    : notePath.split('/').pop()!.split(".")[0];
+  const title =
+    headingNode.type !== "missingTitle"
+      ? remark()
+          .stringify({
+            type: "root",
+            children: (headingNode as MDAST.Heading).children
+          })
+          .trimEnd()
+      : notePath;
 
   return { title, links: getNoteLinks(parseTree), parseTree, noteContents };
 }

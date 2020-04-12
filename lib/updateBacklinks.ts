@@ -1,6 +1,4 @@
 import * as MDAST from "mdast";
-import * as UNIST from "unist";
-import * as is from "unist-util-is";
 
 import getBacklinksBlock from "./getBacklinksBlock";
 import processor from "./processor";
@@ -36,67 +34,24 @@ export default function updateBacklinks(
 
   let backlinksString = "";
   if (backlinks.length > 0) {
-    const backlinkNodes: MDAST.ListItem[] = backlinks.map(entry => ({
-      type: "listItem",
-      spread: false,
-      children: [
-        {
-          type: "paragraph",
-          children: [
-            ({
-              type: "wikiLink",
-              value: entry.sourceTitle,
-              data: { alias: entry.sourceTitle }
-            } as unknown) as MDAST.PhrasingContent
-          ]
-        },
-        {
-          type: "list",
-          ordered: false,
-          spread: false,
-          children: entry.context.map(block => ({
-            type: "listItem",
-            spread: false,
-            children: [block]
-          }))
-        }
-      ]
-    }));
-    const backlinkContainer = {
-      type: "root",
-      children: [
-        {
-          type: "list",
-          ordered: false,
-          spread: false,
-          children: backlinkNodes
-        }
-      ]
-    };
-    backlinksString = `## Backlinks\n${backlinks
+    backlinksString = `## Backlinks\n\n${backlinks
       .map(
         entry =>
           `* [[${entry.sourceTitle}]]\n${entry.context
             .map(
-              block => `\t* ${processor.stringify(block).replace(/\n/g, "\n\t")}\n`
+              block =>
+                `\t* ${processor.stringify(block).replace(/\n/g, "\n\t")}\n`
             )
             .join("")}`
       )
-      .join("")}\n`;
+      .join("")}`;
   }
 
   let beforeBacklinks = noteContents.slice(0, insertionOffset);
-  if (beforeBacklinks.split(/\r?\n/).pop() !== '' && backlinksString !== '') {
-    beforeBacklinks += '\n\n\n\n'
-  }
-  let afterBacklinks = noteContents.slice(oldEndOffset);
-  if (afterBacklinks.split(/\r?\n/).length === 1 && !afterBacklinks.includes('## ...') && backlinksString !== '') {
-    afterBacklinks = '## ...'
-  }
-  const newNoteContents =
-    beforeBacklinks +
-    backlinksString +
-    afterBacklinks;
 
-  return newNoteContents;
+  if (backlinksString.length) {
+    return beforeBacklinks.trim() + "\n\n" + backlinksString.trim() + "\n";
+  } else {
+    return beforeBacklinks;
+  }
 }
